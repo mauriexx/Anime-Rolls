@@ -10,7 +10,6 @@ export class AnimesService {
   async roleos(){
     let random = Math.floor(Math.random() * this.animesArray.length);
     let anime= this.animesArray[random]
-    console.log(anime);
     this.animesArray.splice(random, 1)
     return this.animesArray
   }
