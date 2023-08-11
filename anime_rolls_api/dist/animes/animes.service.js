@@ -21,7 +21,8 @@ let AnimesService = exports.AnimesService = class AnimesService {
         let random = Math.floor(Math.random() * this.animesArray.length);
         let anime = this.animesArray[random];
         this.animesArray.splice(random, 1);
-        return this.animesArray;
+        let animeStr = JSON.stringify(anime);
+        return animeStr;
     }
     async poblarArray(user) {
         const animes = [];
