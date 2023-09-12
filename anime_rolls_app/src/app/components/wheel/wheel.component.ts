@@ -1,32 +1,76 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { AnimeService } from 'src/app/services/anime-service.service';
 
-declare function doWheel(): any;
 @Component({
   selector: 'app-wheel',
   templateUrl: './wheel.component.html',
   styleUrls: ['./wheel.component.css']
-
 })
 export class WheelComponent implements AfterViewInit {
+  constructor(private animeService: AnimeService) {}
+
+  
+  getRandomHslColor() {
+    let h = Math.floor(Math.random() * 360);
+    let s = Math.floor(Math.random() * 100);
+    let l = Math.floor(Math.random() * 100);
+    return `hsl(${h} ${s}% ${l}%)`;}
+
+   getTheRoll() {
+    this.animeService.getRoll().subscribe((data) => {
+      const anime = {
+        text: data,
+        color: this.getRandomHslColor() // Llamada a la función para obtener color aleatorio
+      }
+      this.prizes.push(anime);
+      console.log(this.prizes);
+
+      // Llamada para actualizar la ruleta con el nuevo premio
+      this.updateWheel();
+    });
+  }
 
   prizes = [
-    {
-      text: "Hanma Baki",
-      color: "hsl(197 30% 43%)",
-    },
-    { 
-      text: "Trigun",
-      color: "hsl(173 58% 39%)",
-    },
-    { 
-      text: "One Punch Man",
-      color: "hsl(43 74% 66%)",
-    },
-    {
-      text: "No Game no Life",
-      color: "hsl(27 87% 67%)",
-    }
   ];
+
+  // Aquí estamos moviendo la lógica de construcción de la ruleta a su propio método
+  updateWheel() {
+    const spinner = document.querySelector(".spinner") as HTMLInputElement;
+    spinner.innerHTML = ''; // Limpiamos el spinner antes de añadir nuevos premios
+
+    this.createConicGradient();
+    this.createPrizeNodes();
+  }
+
+  createConicGradient() {
+    const spinner = document.querySelector(".spinner") as HTMLInputElement;
+    spinner.setAttribute(
+      "style",
+      `background: conic-gradient(
+        from -90deg,
+        ${this.prizes
+          .map(({ color }, i) => `${color} 0 ${(100 / this.prizes.length) * (this.prizes.length - i)}%`)
+          .reverse()
+        }
+      );`
+    );
+  }
+
+  createPrizeNodes() {
+    const spinner = document.querySelector(".spinner") as HTMLInputElement;
+    const prizeSlice = 360 / this.prizes.length;
+    const prizeOffset = Math.floor(180 / this.prizes.length);
+    this.prizes.forEach(({ text, color}, i) => {
+      const rotation = ((prizeSlice * i) * -1) - prizeOffset;
+      spinner.insertAdjacentHTML(
+        "beforeend",
+        `<li class="prize" style="--rotate: ${rotation}deg">
+          <span class="text">${text}</span>
+        </li>`
+      );
+    });
+  }
+
   ngAfterViewInit(): void {
     
     
@@ -133,6 +177,4 @@ export class WheelComponent implements AfterViewInit {
     setupWheel();
   }
  
-    
-  
 }

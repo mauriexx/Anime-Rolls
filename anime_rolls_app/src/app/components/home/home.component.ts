@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AnimeService } from 'src/app/services/anime-service.service';
-import * as d3 from "d3";
+
 
 
 @Component({
@@ -21,12 +21,6 @@ export class HomeComponent implements OnInit {
   }
 
 
-  getTheRoll(){
-    this.animeService.getRoll().subscribe((data)=>{
-      this.animes.push(data)
-      console.log(this.animes);
-    })
-  }
 
   
 }
