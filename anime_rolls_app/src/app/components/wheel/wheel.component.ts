@@ -10,17 +10,38 @@ export class WheelComponent implements AfterViewInit {
   constructor(private animeService: AnimeService) {}
 
   
-  getRandomHslColor() {
-    let h = Math.floor(Math.random() * 360);
-    let s = Math.floor(Math.random() * 100);
-    let l = Math.floor(Math.random() * 100);
-    return `hsl(${h} ${s}% ${l}%)`;}
+ 
+  // Lista inicial de colores claros
+  lightColors = [
+    'hsl(45, 100%, 80%)',    // Amarillo claro
+    'hsl(190, 100%, 80%)',  // Cian claro
+    'hsl(345, 100%, 80%)',  // Rojo claro
+    'hsl(120, 100%, 80%)',  // Verde claro
+    'hsl(280, 100%, 80%)',  // Morado claro
+    'hsl(220, 100%, 80%)',  // Azul claro
+    'hsl(60, 100%, 80%)',   // Amarillo-verde claro
+    'hsl(300, 100%, 80%)'   // Magenta claro
+  ];
 
-   getTheRoll() {
+  // Función para obtener un color aleatorio de la lista y eliminarlo
+  getRandomColorFromList() {
+    const randomIndex = Math.floor(Math.random() * this.lightColors.length);
+    const chosenColor = this.lightColors[randomIndex];
+    // Elimina el color seleccionado de la lista
+    this.lightColors.splice(randomIndex, 1);
+    return chosenColor;
+  }
+
+  getTheRoll() {
     this.animeService.getRoll().subscribe((data) => {
+      // Si ya no hay colores en la lista, restablece la lista de colores
+      if(this.lightColors.length === 0) {
+        this.resetColorList();
+      }
+
       const anime = {
         text: data,
-        color: this.getRandomHslColor() // Llamada a la función para obtener color aleatorio
+        color: this.getRandomColorFromList() // Llamada a la función para obtener color de la lista
       }
       this.prizes.push(anime);
       console.log(this.prizes);
@@ -29,6 +50,21 @@ export class WheelComponent implements AfterViewInit {
       this.updateWheel();
     });
   }
+
+  // Función para restablecer la lista de colores si ya no hay más colores para elegir
+  resetColorList() {
+    this.lightColors = [
+      'hsl(45, 100%, 80%)',
+      'hsl(190, 100%, 80%)',
+      'hsl(345, 100%, 80%)',
+      'hsl(120, 100%, 80%)',
+      'hsl(280, 100%, 80%)',
+      'hsl(220, 100%, 80%)',
+      'hsl(60, 100%, 80%)',
+      'hsl(300, 100%, 80%)'
+    ];
+  }
+
 
   prizes = [
   ];

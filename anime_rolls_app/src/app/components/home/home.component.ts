@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.animeService.populateArray("Overus").subscribe((data)=>{   
+    this.animeService.populateArray("Kanade33").subscribe((data)=>{   
     })
   }
 
